@@ -1,52 +1,27 @@
-// Navbar and Category Navigation Component
 import { store } from '../store.js';
 import { i18n } from '../i18n.js';
 
 export class Navbar {
   constructor(containerId) {
     this.container = document.getElementById(containerId);
-    
-    // Subscribe to state changes to trigger re-renders
+
     store.subscribe('currentCategory', () => this.render());
     store.subscribe('currentRoute', () => this.render());
     store.subscribe('activeLanguage', () => this.render());
-    store.subscribe('theme', () => this.render());
-    store.subscribe('transactions', () => this.render());
-    store.subscribe('pendingOrders', () => this.render());
+    store.subscribe('cart', () => this.render());
 
     this.render();
   }
 
-  // Bind interaction event listeners
   bindEvents() {
-    // 1. Search Query Input
     const searchInput = this.container.querySelector('#search-input');
     if (searchInput) {
-      // Retain the query value across re-renders
       searchInput.value = store.state.searchQuery;
-      
       searchInput.addEventListener('input', (e) => {
         store.setSearchQuery(e.target.value);
       });
     }
 
-    // 2. Category Buttons
-    this.container.querySelectorAll('.category-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const cat = btn.getAttribute('data-cat');
-        store.setRoute('pos');
-        store.setCategory(cat);
-      });
-    });
-
-    // Route tabs
-    this.container.querySelectorAll('.route-tab').forEach(btn => {
-      btn.addEventListener('click', () => {
-        store.setRoute(btn.getAttribute('data-route'));
-      });
-    });
-
-    // 3. Language Selector
     const langSelect = this.container.querySelector('#lang-select');
     if (langSelect) {
       langSelect.addEventListener('change', (e) => {
@@ -54,35 +29,39 @@ export class Navbar {
       });
     }
 
-    // 4. Theme Toggle Button
-    const themeBtn = this.container.querySelector('#theme-toggle');
-    if (themeBtn) {
-      themeBtn.addEventListener('click', () => {
-        const nextTheme = store.state.theme === 'dark' ? 'light' : 'dark';
-        store.setTheme(nextTheme);
+    const sidebarToggle = this.container.querySelector('#sidebar-toggle-btn');
+    if (sidebarToggle) {
+      sidebarToggle.addEventListener('click', () => {
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('sidebar-overlay');
+        if (sidebar) {
+          sidebar.classList.remove('hidden');
+          sidebar.classList.add('fixed', 'inset-y-0', 'left-0', 'w-64', 'lg:w-64');
+          overlay?.classList.remove('hidden');
+        }
       });
     }
 
-    // 5. History Button
-    const historyBtn = this.container.querySelector('#history-toggle');
-    if (historyBtn) {
-      historyBtn.addEventListener('click', () => {
-        store.setRoute('transactions');
+    this.container.querySelectorAll('.category-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        store.setCategory(btn.getAttribute('data-cat'));
+      });
+    });
+
+    const holdBtn = this.container.querySelector('#header-hold-btn');
+    if (holdBtn) {
+      holdBtn.addEventListener('click', () => {
+        if (store.state.cart.length > 0) {
+          store.openModal('table');
+        } else {
+          store.showToast(i18n.t('tables.cart_empty_warn') || 'Cart is empty! Add products first.');
+        }
       });
     }
 
-    // 6. Pending Orders Button
-    const pendingBtn = this.container.querySelector('#pending-orders-toggle');
-    if (pendingBtn) {
-      pendingBtn.addEventListener('click', () => {
-        store.openModal('pending_orders');
-      });
-    }
-
-    // 7. Table Map Toggle Button
-    const tableMapBtn = this.container.querySelector('#table-map-toggle');
-    if (tableMapBtn) {
-      tableMapBtn.addEventListener('click', () => {
+    const tableBtn = this.container.querySelector('#header-table-btn');
+    if (tableBtn) {
+      tableBtn.addEventListener('click', () => {
         store.openModal('table');
       });
     }
@@ -91,8 +70,9 @@ export class Navbar {
   render() {
     if (!this.container) return;
 
-    const { currentCategory, currentRoute, activeLanguage, theme, transactions, pendingOrders } = store.state;
-    
+    const { currentCategory, currentRoute, activeLanguage, cart } = store.state;
+    const hasCartItems = cart.length > 0;
+
     const categories = [
       { id: 'all', icon: 'fa-border-all', labelKey: 'categories.all' },
       { id: 'food', icon: 'fa-utensils', labelKey: 'categories.food' },
@@ -101,135 +81,91 @@ export class Navbar {
       { id: 'merch', icon: 'fa-tshirt', labelKey: 'categories.merch' }
     ];
 
-    const routes = [
-      { id: 'dashboard', icon: 'fa-chart-pie', label: 'Dashboard' },
-      { id: 'pos', icon: 'fa-cash-register', label: 'POS' },
-      { id: 'transactions', icon: 'fa-receipt', label: 'Transactions' },
-      { id: 'catalog', icon: 'fa-store', label: 'Catalog' }
-    ];
-
-    const orderCount = transactions.filter(t => !t.refunded).length;
-    const pendingCount = pendingOrders ? pendingOrders.length : 0;
+    const routeLabels = {
+      dashboard: 'Dashboard',
+      pos: 'Point of Sale',
+      transactions: 'Transactions',
+      catalog: 'Catalog',
+    };
 
     this.container.innerHTML = `
-      <header class="border-b border-gray-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 transition-colors duration-200">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
-          
-          <!-- Logo & Brand -->
-          <div class="flex items-center gap-3">
-            <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-amber-500 to-orange-600 flex items-center justify-center shadow-lg shadow-orange-500/20">
-              <i class="fa-solid fa-bolt text-white text-lg"></i>
-            </div>
-            <div class="hidden sm:block">
-              <h1 class="font-bold text-lg leading-none text-gray-900 dark:text-white" data-i18n="app.title">${i18n.t('app.title')}</h1>
-              <span class="text-xs text-gray-500 dark:text-neutral-400" data-i18n="app.tagline">${i18n.t('app.tagline')}</span>
-            </div>
+      <div class="h-full flex items-center justify-between gap-3 px-4">
+        <div class="flex items-center gap-3">
+          <button id="sidebar-toggle-btn" class="lg:hidden w-9 h-9 flex items-center justify-center rounded-lg hover:bg-gray-100 dark:hover:bg-neutral-800 text-gray-500 dark:text-neutral-400 transition-colors">
+            <i class="fa-solid fa-bars"></i>
+          </button>
+          <div class="hidden sm:block">
+            <h2 class="text-sm font-bold text-gray-900 dark:text-white">${routeLabels[currentRoute] || 'Dashboard'}</h2>
           </div>
+        </div>
 
-          <!-- Search Bar -->
+        ${currentRoute === 'pos' ? `
           <div class="flex-1 max-w-md relative">
             <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
-              <i class="fa-solid fa-magnifying-glass"></i>
+              <i class="fa-solid fa-magnifying-glass text-sm"></i>
             </div>
             <input 
               type="text" 
               id="search-input"
-              data-i18n-attr="placeholder:nav.search_placeholder"
               placeholder="${i18n.t('nav.search_placeholder')}" 
-              class="w-full pl-10 pr-4 py-2 rounded-xl bg-gray-100 dark:bg-neutral-800 border-none focus:outline-none focus:ring-2 focus:ring-orange-500 text-gray-900 dark:text-white transition-colors duration-200 placeholder-gray-500 dark:placeholder-neutral-500"
+              class="w-full pl-10 pr-4 py-1.5 rounded-lg bg-gray-100 dark:bg-neutral-800 border-none focus:outline-none focus:ring-2 focus:ring-orange-500 text-sm text-gray-900 dark:text-white transition-all duration-200 placeholder-gray-500 dark:placeholder-neutral-500"
             />
           </div>
 
-          <!-- Actions -->
-          <div class="flex items-center gap-2 sm:gap-3">
-            <!-- Theme Toggle -->
-            <button id="theme-toggle" class="w-10 h-10 flex items-center justify-center rounded-xl bg-gray-100 hover:bg-gray-200 dark:bg-neutral-800 dark:hover:bg-neutral-700 text-gray-600 dark:text-neutral-300 transition-all active:scale-95" title="${i18n.t(theme === 'dark' ? 'nav.theme_light' : 'nav.theme_dark')}">
-              <i class="fa-solid ${theme === 'dark' ? 'fa-sun' : 'fa-moon'}"></i>
-            </button>
-
-            <!-- Language Select -->
-            <div class="h-10 flex items-center bg-gray-100 hover:bg-gray-200 dark:bg-neutral-800 dark:hover:bg-neutral-700 rounded-xl px-3 transition-all cursor-pointer">
-              <i class="fa-solid fa-globe text-gray-500 dark:text-neutral-400 mr-1.5 text-sm"></i>
-              <select id="lang-select" class="bg-transparent border-none outline-none text-sm font-bold text-gray-700 dark:text-neutral-200 cursor-pointer pr-1 focus:ring-0">
-                <option value="en" ${activeLanguage === 'en' ? 'selected' : ''}>EN</option>
-                <option value="es" ${activeLanguage === 'es' ? 'selected' : ''}>ES</option>
-                <option value="th" ${activeLanguage === 'th' ? 'selected' : ''}>TH</option>
-              </select>
-            </div>
-
-            <!-- Table Map Grid Toggle -->
-            <button id="table-map-toggle" class="w-10 h-10 flex items-center justify-center rounded-xl bg-gray-100 hover:bg-gray-200 dark:bg-neutral-800 dark:hover:bg-neutral-700 text-gray-600 dark:text-neutral-300 transition-all active:scale-95" title="Table Map">
-              <i class="fa-solid fa-table-cells-large"></i>
-            </button>
-
-            <!-- Pending Orders / Hold Bills Toggle -->
-            <button id="pending-orders-toggle" class="relative w-10 h-10 flex items-center justify-center rounded-xl bg-gray-100 hover:bg-gray-200 dark:bg-neutral-800 dark:hover:bg-neutral-700 text-gray-600 dark:text-neutral-300 transition-all active:scale-95" title="${i18n.t('nav.pending_orders')}">
-              <i class="fa-solid fa-pause"></i>
-              ${pendingCount > 0 ? `
-                <span class="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-amber-500 text-white text-[10px] font-bold flex items-center justify-center animate-pulse">
-                  ${pendingCount}
-                </span>
-              ` : ''}
-            </button>
-
-            <!-- Transaction History Toggle -->
-            <button id="history-toggle" class="relative w-10 h-10 flex items-center justify-center rounded-xl bg-gray-100 hover:bg-gray-200 dark:bg-neutral-800 dark:hover:bg-neutral-700 text-gray-600 dark:text-neutral-300 transition-all active:scale-95" title="${i18n.t('nav.history')}">
-              <i class="fa-solid fa-clock-rotate-left"></i>
-              ${orderCount > 0 ? `
-                <span class="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-orange-500 text-white text-[10px] font-bold flex items-center justify-center animate-pulse">
-                  ${orderCount}
-                </span>
-              ` : ''}
-            </button>
-          </div>
-        </div>
-      </header>
-
-      <!-- Category Filter Slider -->
-      <nav class="bg-gray-50 dark:bg-neutral-950 border-b border-gray-100 dark:border-neutral-900 py-3 transition-colors duration-200">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div class="flex gap-2 overflow-x-auto pb-1 -mb-1">
-            ${routes.map(route => {
-              const isActive = currentRoute === route.id;
+          <div class="flex items-center gap-1.5">
+            ${categories.map(cat => {
+              const isActive = currentCategory === cat.id;
               return `
-                <button
-                  data-route="${route.id}"
-                  class="route-tab flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold transition-all ${
-                    isActive
-                      ? 'bg-neutral-900 text-white dark:bg-white dark:text-neutral-950 shadow-md'
-                      : 'bg-white dark:bg-neutral-900 text-gray-600 dark:text-neutral-400 border border-gray-200 dark:border-neutral-800 hover:bg-gray-100 dark:hover:bg-neutral-800'
+                <button 
+                  data-cat="${cat.id}"
+                  class="category-btn flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all duration-150 ${
+                    isActive 
+                      ? 'bg-orange-500 text-white' 
+                      : 'bg-gray-100 dark:bg-neutral-800 text-gray-600 dark:text-neutral-400 hover:bg-gray-200 dark:hover:bg-neutral-700'
                   }"
                 >
-                  <i class="fa-solid ${route.icon}"></i>
-                  <span>${route.label}</span>
+                  <i class="fa-solid ${cat.icon} text-[10px]"></i>
+                  <span class="hidden md:inline">${i18n.t(cat.labelKey)}</span>
                 </button>
               `;
             }).join('')}
           </div>
 
-          ${currentRoute === 'pos' ? `
-            <div class="category-slider flex gap-2 overflow-x-auto pt-3 pb-1 -mb-1">
-              ${categories.map(cat => {
-              const isActive = currentCategory === cat.id;
-              
-              return `
-                <button 
-                  data-cat="${cat.id}"
-                  class="category-btn flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold transition-all ${
-                    isActive 
-                      ? 'bg-orange-500 text-white shadow-md shadow-orange-500/20' 
-                      : 'bg-white dark:bg-neutral-900 text-gray-600 dark:text-neutral-400 border border-gray-200 dark:border-neutral-800 hover:bg-gray-100 dark:hover:bg-neutral-800'
-                  }"
-                >
-                  <i class="fa-solid ${cat.icon}"></i>
-                  <span data-i18n="${cat.labelKey}">${i18n.t(cat.labelKey)}</span>
-                </button>
-              `;
-              }).join('')}
+          <div class="flex items-center gap-1">
+            <button id="header-table-btn" class="h-8 px-3 flex items-center gap-1.5 rounded-lg text-xs font-semibold bg-gray-100 dark:bg-neutral-800 text-gray-600 dark:text-neutral-400 hover:bg-gray-200 dark:hover:bg-neutral-700 transition-colors" title="Table Map">
+              <i class="fa-solid fa-table-cells-large text-[10px]"></i>
+              <span class="hidden lg:inline">Table</span>
+            </button>
+            <button id="header-hold-btn" class="h-8 px-3 flex items-center gap-1.5 rounded-lg text-xs font-semibold transition-colors ${hasCartItems ? 'bg-amber-500/10 text-amber-600 dark:text-amber-400 hover:bg-amber-500/20' : 'bg-gray-100 dark:bg-neutral-800 text-gray-400 dark:text-neutral-500'}" title="${i18n.t('cart.hold_bill')}">
+              <i class="fa-solid fa-pause text-[10px]"></i>
+              <span class="hidden lg:inline">${i18n.t('cart.hold_bill')}</span>
+            </button>
+          </div>
+        ` : `
+          <div class="flex-1 max-w-sm relative">
+            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
+              <i class="fa-solid fa-magnifying-glass text-sm"></i>
             </div>
-          ` : ''}
+            <input 
+              type="text" 
+              id="search-input"
+              placeholder="${i18n.t('nav.search_placeholder')}" 
+              class="w-full pl-10 pr-4 py-1.5 rounded-lg bg-gray-100 dark:bg-neutral-800 border-none focus:outline-none focus:ring-2 focus:ring-orange-500 text-sm text-gray-900 dark:text-white transition-all duration-200 placeholder-gray-500 dark:placeholder-neutral-500"
+            />
+          </div>
+        `}
+
+        <div class="flex items-center gap-2">
+          <div class="h-8 flex items-center bg-gray-100 hover:bg-gray-200 dark:bg-neutral-800 dark:hover:bg-neutral-700 rounded-lg px-2.5 transition-all cursor-pointer">
+            <i class="fa-solid fa-globe text-gray-400 dark:text-neutral-500 mr-1 text-xs"></i>
+            <select id="lang-select" class="bg-transparent border-none outline-none text-xs font-bold text-gray-600 dark:text-neutral-300 cursor-pointer pr-0.5 focus:ring-0">
+              <option value="en" ${activeLanguage === 'en' ? 'selected' : ''}>EN</option>
+              <option value="es" ${activeLanguage === 'es' ? 'selected' : ''}>ES</option>
+              <option value="th" ${activeLanguage === 'th' ? 'selected' : ''}>TH</option>
+            </select>
+          </div>
         </div>
-      </nav>
+      </div>
     `;
 
     this.bindEvents();

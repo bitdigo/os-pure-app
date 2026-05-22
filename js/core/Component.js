@@ -1,14 +1,20 @@
-// Tiny component base for the app's native ES module UI.
 import { store } from '../store.js';
 
 export class Component {
-  constructor(containerId) {
-    this.container = document.getElementById(containerId);
+  constructor(containerIdOrElement) {
+    if (typeof containerIdOrElement === 'string') {
+      this.container = document.getElementById(containerIdOrElement);
+    } else if (containerIdOrElement instanceof HTMLElement) {
+      this.container = containerIdOrElement;
+    } else {
+      this.container = null;
+    }
+
     this.unsubscribers = [];
     this.eventCleanups = [];
 
     if (!this.container) {
-      console.warn(`Component container #${containerId} was not found.`);
+      console.warn(`Component container was not found.`);
     }
   }
 

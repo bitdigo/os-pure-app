@@ -54,18 +54,6 @@ export class CartPanel {
       });
     }
 
-    // Hold Cart Button
-    const holdBtn = this.container.querySelector('#hold-cart-btn');
-    if (holdBtn) {
-      holdBtn.addEventListener('click', () => {
-        if (store.state.cart.length > 0) {
-          store.openModal('table');
-        } else {
-          store.showToast(i18n.t('tables.cart_empty_warn') || 'Cart is empty! Add products first.');
-        }
-      });
-    }
-
     // 5. Checkout Button
     const checkoutBtn = this.container.querySelector('#checkout-btn');
     if (checkoutBtn) {
@@ -187,32 +175,21 @@ export class CartPanel {
     }
 
     this.container.innerHTML = `
-      <div class="h-full flex flex-col bg-white dark:bg-neutral-900 border-l border-gray-200 dark:border-neutral-800 transition-colors duration-200 shadow-xl lg:shadow-none">
+      <div class="h-full flex flex-col bg-white dark:bg-neutral-900 border-l border-gray-200 dark:border-neutral-800 transition-colors duration-200">
         
-        <!-- Cart Header -->
-        <div class="p-4 border-b border-gray-200 dark:border-neutral-800 flex items-center justify-between">
+        <div class="px-4 py-3 border-b border-gray-200 dark:border-neutral-800 flex items-center justify-between">
           <div class="flex items-center gap-2">
-            <i class="fa-solid fa-receipt text-orange-500 text-lg"></i>
-            <h2 class="font-bold text-gray-900 dark:text-white" data-i18n="cart.title">${i18n.t('cart.title')}</h2>
+            <i class="fa-solid fa-receipt text-orange-500"></i>
+            <h2 class="font-bold text-sm text-gray-900 dark:text-white" data-i18n="cart.title">${i18n.t('cart.title')}</h2>
           </div>
           ${hasItems ? `
-            <div class="flex items-center gap-2.5">
-              <button 
-                id="hold-cart-btn" 
-                class="text-xs font-semibold text-amber-500 hover:text-amber-600 transition-colors flex items-center gap-1"
-              >
-                <i class="fa-solid fa-pause"></i>
-                <span data-i18n="cart.hold_bill">${i18n.t('cart.hold_bill')}</span>
-              </button>
-              <span class="w-[1px] h-3 bg-gray-200 dark:bg-neutral-800"></span>
-              <button 
-                id="clear-cart-btn" 
-                class="text-xs font-semibold text-red-500 hover:text-red-600 transition-colors flex items-center gap-1"
-              >
-                <i class="fa-solid fa-trash-can"></i>
-                <span data-i18n="cart.clear">${i18n.t('cart.clear')}</span>
-              </button>
-            </div>
+            <button 
+              id="clear-cart-btn" 
+              class="text-xs font-semibold text-red-500 hover:text-red-600 transition-colors flex items-center gap-1"
+            >
+              <i class="fa-solid fa-trash-can"></i>
+              <span data-i18n="cart.clear">${i18n.t('cart.clear')}</span>
+            </button>
           ` : ''}
         </div>
 
@@ -428,7 +405,7 @@ export class CartPanel {
           <button 
             id="checkout-btn"
             ${!hasItems ? 'disabled' : ''}
-            class="w-full py-3.5 rounded-2xl bg-gradient-to-r from-orange-500 to-orange-600 text-white font-bold shadow-lg hover:shadow-orange-500/20 active:scale-[0.99] disabled:opacity-50 disabled:pointer-events-none transition-all flex items-center justify-center gap-2"
+            class="w-full py-3.5 rounded-2xl bg-orange-500 hover:bg-orange-600 text-white font-bold active:scale-[0.99] disabled:opacity-50 disabled:pointer-events-none transition-all flex items-center justify-center gap-2"
           >
             <i class="fa-solid fa-credit-card"></i>
             <span data-i18n="cart.checkout">${i18n.t('cart.checkout')}</span>

@@ -178,7 +178,7 @@ export class TableModal {
         const totalItemsCount = heldOrder.cart.reduce((sum, item) => sum + item.quantity, 0);
         const durationText = this.getOccupancyTime(heldOrder.timestamp);
         
-        tableCard.className = 'relative flex flex-col justify-between p-4 rounded-2xl bg-white dark:bg-neutral-800 border-2 border-amber-500/80 dark:border-amber-500/60 shadow-lg shadow-amber-500/5 dark:shadow-none hover:shadow-xl transition-all duration-200 group overflow-hidden h-44';
+        tableCard.className = 'relative flex flex-col justify-between p-4 rounded-2xl bg-white dark:bg-neutral-800 border-2 border-amber-500/80 dark:border-amber-500/60 hover:border-amber-500 transition-all duration-200 group overflow-hidden h-44';
         tableCard.innerHTML = `
           <div>
             <div class="flex justify-between items-start">

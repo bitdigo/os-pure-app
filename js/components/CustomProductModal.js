@@ -145,7 +145,7 @@ export class CustomProductModal {
               </button>
               <button 
                 type="submit"
-                class="py-2.5 px-6 rounded-xl bg-orange-500 hover:bg-orange-600 text-white font-bold text-xs shadow-md shadow-orange-500/10 transition-colors flex items-center gap-1"
+                class="py-2.5 px-6 rounded-xl bg-orange-500 hover:bg-orange-600 text-white font-bold text-xs transition-colors flex items-center gap-1"
               >
                 <i class="fa-solid fa-cart-plus"></i>
                 <span data-i18n="custom_product.add_btn">${i18n.t('custom_product.add_btn')}</span>

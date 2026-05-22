@@ -40,6 +40,8 @@ class Store {
       pendingOrders: [],
       activeInvoice: null,
       currentRoute: 'dashboard',
+      previousRoute: null,
+      routeQuery: {},
       activeModal: null,
       toast: null
     };
@@ -153,10 +155,12 @@ class Store {
   }
 
   // Set active app route. Keep this light: routes are for pages, not modals.
-  setRoute(route) {
+  setRoute(route, query = {}) {
     const nextRoute = route || 'pos';
-    if (this.state.currentRoute === nextRoute) return;
+    if (this.state.currentRoute === nextRoute && JSON.stringify(this.state.routeQuery) === JSON.stringify(query)) return;
+    this.state.previousRoute = this.state.currentRoute;
     this.state.currentRoute = nextRoute;
+    this.state.routeQuery = query;
     this.notify('currentRoute');
   }
 

@@ -583,7 +583,7 @@ export class CheckoutModal {
             </button>
             <button 
               id="success-done-btn"
-              class="py-3 px-4 rounded-xl bg-orange-500 hover:bg-orange-600 text-white font-bold transition-all shadow-md shadow-orange-500/10 flex items-center justify-center gap-2"
+              class="py-3 px-4 rounded-xl bg-orange-500 hover:bg-orange-600 text-white font-bold transition-all flex items-center justify-center gap-2"
             >
               <i class="fa-solid fa-arrow-right"></i>
               <span data-i18n="receipt.close">${i18n.t('receipt.close')}</span>

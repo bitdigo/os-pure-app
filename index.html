@@ -6,18 +6,14 @@
   <meta name="description" content="BitDigo POS - A sleek, client-side, multi-payment Point of Sale system supporting Bitcoin Lightning.">
   <title>BitDigo POS - Point of Sale</title>
   
-  <!-- FontAwesome Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
   
-  <!-- Google Fonts - Inter -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;950&display=swap" rel="stylesheet">
   
-  <!-- Custom Styles CSS -->
   <link rel="stylesheet" href="./css/styles.css">
   
-  <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
@@ -47,39 +43,39 @@
     }
   </script>
 </head>
-<body class="bg-gray-100 dark:bg-neutral-950 font-sans text-gray-900 dark:text-neutral-100 antialiased overflow-hidden h-screen transition-colors duration-200">
+<body class="bg-gray-50 dark:bg-neutral-950 font-sans text-gray-900 dark:text-neutral-100 antialiased overflow-hidden h-screen transition-colors duration-200">
 
-  <!-- Core App Grid Layout -->
-  <div class="h-screen flex flex-col">
-    
-    <!-- Navbar Container -->
-    <div id="navbar"></div>
+  <div class="h-screen flex">
 
-    <!-- Main Workspace Content -->
-    <main class="flex-1 flex overflow-hidden relative">
-      
-      <!-- Route Page Content -->
-      <section id="page-content" class="flex-1 overflow-y-auto">
-        <div id="dashboard-page"></div>
-        <div id="transactions-page"></div>
-        <div id="catalog-page"></div>
-      </section>
+    <aside id="sidebar" class="hidden lg:flex flex-col w-[72px] lg:w-[72px] bg-white dark:bg-neutral-900 border-r border-gray-200 dark:border-neutral-800 flex-shrink-0 transition-all duration-200 z-50">
+    </aside>
 
-      <!-- Product Catalog Section (Left) -->
-      <section class="flex-1 overflow-y-auto hidden" id="product-grid"></section>
+    <div id="sidebar-overlay" class="lg:hidden fixed inset-0 bg-black/50 z-40 hidden backdrop-blur-sm"></div>
 
-      <!-- Cart Drawer Section (Right) -->
-      <!-- Collapsible on mobile, static on desktop -->
-      <section 
-        id="cart-panel" 
-        class="hidden fixed inset-y-0 right-0 z-40 w-full sm:w-96 lg:w-96 lg:static lg:block transform translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out lg:border-l lg:border-gray-200 lg:dark:border-neutral-800"
-      ></section>
+    <div class="flex-1 flex flex-col overflow-hidden">
 
-    </main>
+      <header id="navbar" class="h-14 flex-shrink-0 border-b border-gray-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 transition-colors duration-200 z-10">
+      </header>
+
+      <main class="flex-1 flex overflow-hidden relative bg-gray-50 dark:bg-neutral-950">
+
+        <section id="page-content" class="flex-1 overflow-y-auto relative">
+          <div id="page-container" class="min-h-full"></div>
+        </section>
+
+        <section class="flex-1 overflow-y-auto hidden" id="product-grid"></section>
+
+        <section 
+          id="cart-panel" 
+          class="hidden fixed inset-y-0 right-0 z-30 w-full sm:w-96 lg:w-96 transform translate-x-full transition-transform duration-300 ease-in-out"
+        ></section>
+
+      </main>
+
+    </div>
 
   </div>
 
-  <!-- Floating Mobile Cart Button -->
   <button 
     id="mobile-cart-toggle" 
     class="hidden lg:hidden fixed bottom-6 right-6 z-40 w-14 h-14 rounded-full bg-orange-500 text-white shadow-xl shadow-orange-500/30 flex items-center justify-center text-xl transition-transform active:scale-95"
@@ -88,30 +84,48 @@
     <span id="mobile-cart-badge" class="absolute -top-1 -right-1 w-6 h-6 rounded-full bg-red-500 text-white text-[11px] font-black flex items-center justify-center hidden">0</span>
   </button>
 
-  <!-- Darken background overlay when mobile cart is open -->
   <div 
     id="mobile-cart-overlay" 
-    class="lg:hidden fixed inset-0 bg-black/50 z-30 hidden backdrop-blur-xs transition-opacity"
+    class="lg:hidden fixed inset-0 bg-black/50 z-20 hidden backdrop-blur-xs transition-opacity"
   ></div>
 
-  <!-- Modal Mount Points -->
   <div id="checkout-modal-container"></div>
   <div id="history-modal-container"></div>
   <div id="catalog-modal-container"></div>
   <div id="pending-orders-modal-container"></div>
   <div id="table-modal-container"></div>
 
-  <!-- Mobile Cart Toggle Interaction script -->
   <script>
     document.addEventListener('DOMContentLoaded', () => {
+      const sidebar = document.getElementById('sidebar');
+      const sidebarOverlay = document.getElementById('sidebar-overlay');
+      const sidebarToggleBtn = document.getElementById('sidebar-toggle-btn');
+      let sidebarOpen = false;
+
+      function toggleSidebar() {
+        sidebarOpen = !sidebarOpen;
+        if (sidebarOpen) {
+          sidebar.classList.remove('hidden');
+          sidebar.classList.add('fixed', 'inset-y-0', 'left-0', 'w-64', 'lg:w-64');
+          sidebarOverlay.classList.remove('hidden');
+        } else {
+          sidebar.classList.add('hidden');
+          sidebar.classList.remove('fixed', 'inset-y-0', 'left-0', 'w-64', 'lg:w-64');
+          sidebarOverlay.classList.add('hidden');
+        }
+      }
+
+      if (sidebarToggleBtn) sidebarToggleBtn.addEventListener('click', toggleSidebar);
+      sidebarOverlay.addEventListener('click', toggleSidebar);
+
       const toggleBtn = document.getElementById('mobile-cart-toggle');
       const cartPanel = document.getElementById('cart-panel');
       const overlay = document.getElementById('mobile-cart-overlay');
-      let isOpen = false;
+      let cartOpen = false;
 
       function toggleCart() {
-        isOpen = !isOpen;
-        if (isOpen) {
+        cartOpen = !cartOpen;
+        if (cartOpen) {
           cartPanel.classList.remove('translate-x-full');
           overlay.classList.remove('hidden');
           toggleBtn.innerHTML = '<i class="fa-solid fa-xmark"></i>';
@@ -124,17 +138,15 @@
 
       toggleBtn.addEventListener('click', toggleCart);
       overlay.addEventListener('click', toggleCart);
-      
-      // Auto close cart drawer on mobile when checkout button is clicked
+
       document.addEventListener('click', (e) => {
-        if (e.target.closest('#checkout-btn') && isOpen) {
+        if (e.target.closest('#checkout-btn') && cartOpen) {
           toggleCart();
         }
       });
     });
   </script>
 
-  <!-- Application Script Bootstrapper -->
   <script type="module" src="./js/app.js"></script>
 </body>
 </html>
