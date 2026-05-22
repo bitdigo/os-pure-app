@@ -25,6 +25,7 @@ class App {
 
     initRouter(store);
 
+    this.initFormSubmitGuard();
     this.initToastSystem();
 
     new Sidebar('sidebar');
@@ -53,6 +54,15 @@ class App {
     });
 
     console.log('BitDigo POS system successfully initialized.');
+  }
+
+  initFormSubmitGuard() {
+    document.addEventListener('submit', (event) => {
+      const form = event.target;
+      if (!(form instanceof HTMLFormElement)) return;
+      if (form.dataset.nativeSubmit === 'true') return;
+      event.preventDefault();
+    }, true);
   }
 
   initDynamicRouting() {

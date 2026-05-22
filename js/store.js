@@ -156,7 +156,7 @@ class Store {
 
   // Set active app route. Keep this light: routes are for pages, not modals.
   setRoute(route, query = {}) {
-    const nextRoute = route || 'pos';
+    const nextRoute = route || 'dashboard';
     if (this.state.currentRoute === nextRoute && JSON.stringify(this.state.routeQuery) === JSON.stringify(query)) return;
     this.state.previousRoute = this.state.currentRoute;
     this.state.currentRoute = nextRoute;

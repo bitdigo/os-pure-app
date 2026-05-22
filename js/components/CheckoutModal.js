@@ -311,6 +311,7 @@ export class CheckoutModal {
     }
 
     const { total } = store.getCartTotals();
+    const { activeLanguage } = store.state;
     const formattedTotal = i18n.formatCurrency(total);
 
     // Mock BTC exchange rate $65,000 for Lightning Sat calculation

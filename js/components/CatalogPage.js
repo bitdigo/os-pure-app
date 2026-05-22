@@ -150,7 +150,7 @@ export class CatalogPage extends Component {
                 <input name="image" type="url" value="${escapeHtml(activeProduct?.image || '')}" class="w-full px-3 py-2.5 rounded-xl bg-gray-100 dark:bg-neutral-800 border border-transparent focus:outline-none focus:ring-2 focus:ring-orange-500 transition-all">
               </div>
               <div class="flex gap-2 pt-2">
-                <button class="flex-1 px-4 py-2.5 rounded-xl bg-orange-500 hover:bg-orange-600 text-white text-sm font-bold transition-all active:scale-95">${escapeHtml(i18n.t('catalog.form_save'))}</button>
+                <button type="submit" class="flex-1 px-4 py-2.5 rounded-xl bg-orange-500 hover:bg-orange-600 text-white text-sm font-bold transition-all active:scale-95">${escapeHtml(i18n.t('catalog.form_save'))}</button>
                 ${activeProduct ? `
                   <button type="button" class="delete-product-btn px-4 py-2.5 rounded-xl bg-red-50 text-red-600 hover:bg-red-600 hover:text-white dark:bg-red-500/10 text-sm font-bold transition-all active:scale-95">${escapeHtml(i18n.t('catalog.form_delete'))}</button>
                 ` : ''}
