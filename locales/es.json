@@ -1,0 +1,103 @@
+{
+  "app": {
+    "title": "BitDigo POS",
+    "tagline": "Punto de Venta Bitcoin y Multi-pago"
+  },
+  "nav": {
+    "search_placeholder": "Buscar productos...",
+    "history": "Historial",
+    "language": "Idioma",
+    "theme_dark": "Modo Oscuro",
+    "theme_light": "Modo Claro",
+    "pending_orders": "Pedidos Pendientes"
+  },
+  "categories": {
+    "all": "Todos",
+    "food": "Comidas y Platos",
+    "drinks": "Bebidas",
+    "desserts": "Postres",
+    "merch": "Mercancía",
+    "custom": "Cargo Personalizado"
+  },
+  "cart": {
+    "title": "Pedido Actual",
+    "empty": "El carrito está vacío",
+    "subtotal": "Subtotal",
+    "discount": "Descuento",
+    "tax": "Impuestos (7%)",
+    "total": "Total",
+    "checkout": "Proceder al Pago",
+    "clear": "Vaciar Carrito",
+    "discount_percent": "%",
+    "discount_amount": "Monto",
+    "coupon_code": "Cupón",
+    "coupon_placeholder": "Código (Ej. VIP15)",
+    "coupon_apply": "Aplicar",
+    "coupon_applied_label": "Cupón",
+    "hold_bill": "Retener Pedido",
+    "hold_prompt": "Ingrese el número de mesa o nombre de cliente para este pedido:",
+    "overwrite_confirm": "Restaurar este pedido sobrescribirá su carrito actual. ¿Desea continuar?"
+  },
+  "checkout": {
+    "title": "Pasarela de Pago",
+    "select_method": "Seleccione Método de Pago",
+    "cash": "Pago en Efectivo",
+    "card": "Lector de Tarjetas",
+    "lightning": "Bitcoin Lightning",
+    "amount_due": "Total a Pagar",
+    "cash_received": "Efectivo Recibido",
+    "change_due": "Cambio a Devolver",
+    "complete": "Completar Transacción",
+    "status_pending": "Esperando el pago...",
+    "status_processing": "Verificando transacción...",
+    "status_success": "¡Pago Exitoso!",
+    "status_failed": "Pago Fallido",
+    "cancel": "Cancelar",
+    "sats_equivalent": "Equivalente en Sats",
+    "ln_invoice_info": "Escanee este código QR con cualquier billetera Lightning para pagar"
+  },
+  "receipt": {
+    "title": "Recibo",
+    "merchant": "Tienda BitDigo",
+    "address": "123 Bitcoin Boulevard",
+    "invoice_id": "ID de Factura",
+    "date": "Fecha",
+    "payment_method": "Método de Pago",
+    "thank_you": "¡Gracias por su compra!",
+    "print": "Imprimir Recibo",
+    "close": "Cerrar",
+    "refunded": "REMBOLSADO"
+  },
+  "history": {
+    "title": "Historial de Transacciones",
+    "no_transactions": "No se encontraron transacciones",
+    "refund": "Reembolso",
+    "total_sales": "Ventas Totales",
+    "order_count": "Total de Pedidos",
+    "close": "Cerrar Panel",
+    "clear_history": "Borrar Historial"
+  },
+  "custom_product": {
+    "title": "Añadir Cargo Personalizado",
+    "name_label": "Nombre del Artículo",
+    "name_placeholder": "Ej. Servicio Especial",
+    "price_label": "Precio",
+    "category_label": "Categoría",
+    "add_btn": "Añadir al Carrito"
+  },
+  "toast": {
+    "item_added": "Se añadió {name} al carrito",
+    "cart_cleared": "Carrito vaciado",
+    "transaction_saved": "Transacción guardada con éxito",
+    "transaction_refunded": "La transacción ha sido reembolsada",
+    "history_cleared": "Historial de transacciones borrado",
+    "invalid_amount": "Por favor introduzca un monto válido",
+    "invoice_paid": "¡Factura Lightning pagada!",
+    "coupon_applied": "¡Cupón {code} aplicado con éxito!",
+    "invalid_coupon": "Código de cupón inválido",
+    "order_held": "Pedido guardado con éxito como '{name}'",
+    "order_resumed": "Pedido '{name}' restaurado",
+    "order_deleted": "Pedido pendiente '{name}' eliminado",
+    "order_delete_confirm": "¿Está seguro de que desea eliminar este pedido pendiente?"
+  }
+}

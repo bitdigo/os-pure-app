@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="BitDigo POS - A sleek, client-side, multi-payment Point of Sale system supporting Bitcoin Lightning.">
+  <title>BitDigo POS - Point of Sale</title>
+  
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  
+  <!-- Google Fonts - Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;950&display=swap" rel="stylesheet">
+  
+  <!-- Custom Styles CSS -->
+  <link rel="stylesheet" href="./css/styles.css">
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+          },
+          colors: {
+            orange: {
+              50: '#fff7ed',
+              100: '#ffedd5',
+              200: '#fed7aa',
+              300: '#fdba74',
+              400: '#fb923c',
+              500: '#f97316',
+              600: '#ea580c',
+              700: '#c2410c',
+              800: '#9a3412',
+              900: '#7c2d12',
+              950: '#431407',
+            }
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="bg-gray-100 dark:bg-neutral-950 font-sans text-gray-900 dark:text-neutral-100 antialiased overflow-hidden h-screen transition-colors duration-200">
+
+  <!-- Core App Grid Layout -->
+  <div class="h-screen flex flex-col">
+    
+    <!-- Navbar Container -->
+    <div id="navbar"></div>
+
+    <!-- Main Workspace Content -->
+    <main class="flex-1 flex overflow-hidden relative">
+      
+      <!-- Product Catalog Section (Left) -->
+      <section class="flex-1 overflow-y-auto" id="product-grid"></section>
+
+      <!-- Cart Drawer Section (Right) -->
+      <!-- Collapsible on mobile, static on desktop -->
+      <section 
+        id="cart-panel" 
+        class="fixed inset-y-0 right-0 z-40 w-full sm:w-96 lg:w-96 lg:static lg:block transform translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out lg:border-l lg:border-gray-200 lg:dark:border-neutral-800"
+      ></section>
+
+    </main>
+
+  </div>
+
+  <!-- Floating Mobile Cart Button -->
+  <button 
+    id="mobile-cart-toggle" 
+    class="lg:hidden fixed bottom-6 right-6 z-40 w-14 h-14 rounded-full bg-orange-500 text-white shadow-xl shadow-orange-500/30 flex items-center justify-center text-xl transition-transform active:scale-95"
+  >
+    <i class="fa-solid fa-basket-shopping"></i>
+    <span id="mobile-cart-badge" class="absolute -top-1 -right-1 w-6 h-6 rounded-full bg-red-500 text-white text-[11px] font-black flex items-center justify-center hidden">0</span>
+  </button>
+
+  <!-- Darken background overlay when mobile cart is open -->
+  <div 
+    id="mobile-cart-overlay" 
+    class="lg:hidden fixed inset-0 bg-black/50 z-30 hidden backdrop-blur-xs transition-opacity"
+  ></div>
+
+  <!-- Modal Mount Points -->
+  <div id="checkout-modal-container"></div>
+  <div id="history-modal-container"></div>
+  <div id="catalog-modal-container"></div>
+  <div id="pending-orders-modal-container"></div>
+  <div id="table-modal-container"></div>
+
+  <!-- Mobile Cart Toggle Interaction script -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const toggleBtn = document.getElementById('mobile-cart-toggle');
+      const cartPanel = document.getElementById('cart-panel');
+      const overlay = document.getElementById('mobile-cart-overlay');
+      let isOpen = false;
+
+      function toggleCart() {
+        isOpen = !isOpen;
+        if (isOpen) {
+          cartPanel.classList.remove('translate-x-full');
+          overlay.classList.remove('hidden');
+          toggleBtn.innerHTML = '<i class="fa-solid fa-xmark"></i>';
+        } else {
+          cartPanel.classList.add('translate-x-full');
+          overlay.classList.add('hidden');
+          toggleBtn.innerHTML = '<i class="fa-solid fa-basket-shopping"></i>';
+        }
+      }
+
+      toggleBtn.addEventListener('click', toggleCart);
+      overlay.addEventListener('click', toggleCart);
+      
+      // Auto close cart drawer on mobile when checkout button is clicked
+      document.addEventListener('click', (e) => {
+        if (e.target.closest('#checkout-btn') && isOpen) {
+          toggleCart();
+        }
+      });
+    });
+  </script>
+
+  <!-- Application Script Bootstrapper -->
+  <script type="module" src="./js/app.js"></script>
+</body>
+</html>

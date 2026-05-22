@@ -1,0 +1,103 @@
+{
+  "app": {
+    "title": "BitDigo POS",
+    "tagline": "ระบบจัดการหน้าร้าน รองรับบิทคอยน์และช่องทางชำระเงินที่หลากหลาย"
+  },
+  "nav": {
+    "search_placeholder": "ค้นหาสินค้า...",
+    "history": "ประวัติการขาย",
+    "language": "ภาษา",
+    "theme_dark": "โหมดมืด",
+    "theme_light": "โหมดสว่าง",
+    "pending_orders": "รายการค้างชำระ"
+  },
+  "categories": {
+    "all": "สินค้าทั้งหมด",
+    "food": "อาหารและจานหลัก",
+    "drinks": "เครื่องดื่ม",
+    "desserts": "ของหวาน",
+    "merch": "สินค้าพรีเมียม",
+    "custom": "กำหนดราคาเอง"
+  },
+  "cart": {
+    "title": "รายการสั่งซื้อปัจจุบัน",
+    "empty": "ไม่มีสินค้าในตะกร้า",
+    "subtotal": "ยอดรวมสินค้า",
+    "discount": "ส่วนลด",
+    "tax": "ภาษี (7%)",
+    "total": "ยอดรวมสุทธิ",
+    "checkout": "ดำเนินการชำระเงิน",
+    "clear": "ล้างตะกร้า",
+    "discount_percent": "%",
+    "discount_amount": "จำนวนเงิน",
+    "coupon_code": "คูปอง",
+    "coupon_placeholder": "รหัสคูปอง (เช่น VIP15)",
+    "coupon_apply": "ใช้งาน",
+    "coupon_applied_label": "คูปอง",
+    "hold_bill": "พักบิล",
+    "hold_prompt": "กรอกหมายเลขโต๊ะหรือข้อมูลอ้างอิงลูกค้าสำหรับรายการนี้:",
+    "overwrite_confirm": "การเรียกบิลนี้มาใหม่จะแทนที่สินค้าในตะกร้าปัจจุบัน ต้องการดำเนินการต่อหรือไม่?"
+  },
+  "checkout": {
+    "title": "ขั้นตอนชำระเงิน",
+    "select_method": "เลือกช่องทางการชำระเงิน",
+    "cash": "เงินสด",
+    "card": "เครื่องรูดบัตร",
+    "lightning": "บิทคอยน์ Lightning",
+    "amount_due": "ยอดที่ต้องชำระ",
+    "cash_received": "รับเงินสดมา",
+    "change_due": "เงินทอน",
+    "complete": "เสร็จสิ้นการขาย",
+    "status_pending": "กำลังรอชำระเงิน...",
+    "status_processing": "กำลังตรวจสอบรายการ...",
+    "status_success": "ชำระเงินสำเร็จ!",
+    "status_failed": "การชำระเงินล้มเหลว",
+    "cancel": "ยกเลิก",
+    "sats_equivalent": "มูลค่าหน่วย Sats",
+    "ln_invoice_info": "สแกนรหัส QR นี้ด้วยกระเป๋าเงิน Lightning ใดก็ได้เพื่อชำระเงิน"
+  },
+  "receipt": {
+    "title": "ใบเสร็จรับเงิน",
+    "merchant": "ร้านค้า BitDigo",
+    "address": "123 ถนนบิทคอยน์",
+    "invoice_id": "เลขที่ใบเสร็จ",
+    "date": "วันที่",
+    "payment_method": "ชำระด้วย",
+    "thank_you": "ขอบคุณที่ใช้บริการ!",
+    "print": "พิมพ์ใบเสร็จ",
+    "close": "ปิด",
+    "refunded": "คืนเงินแล้ว"
+  },
+  "history": {
+    "title": "ประวัติการชำระเงิน",
+    "no_transactions": "ไม่พบประวัติธุรกรรม",
+    "refund": "คืนเงิน",
+    "total_sales": "ยอดขายทั้งหมด",
+    "order_count": "จำนวนรายการ",
+    "close": "ปิดหน้าต่าง",
+    "clear_history": "ล้างประวัติทั้งหมด"
+  },
+  "custom_product": {
+    "title": "เพิ่มรายการระบุราคาเอง",
+    "name_label": "ชื่อรายการ",
+    "name_placeholder": "เช่น ค่าบริการพิเศษ",
+    "price_label": "ราคา",
+    "category_label": "หมวดหมู่",
+    "add_btn": "เพิ่มลงตะกร้า"
+  },
+  "toast": {
+    "item_added": "เพิ่ม {name} ลงตะกร้าแล้ว",
+    "cart_cleared": "ล้างข้อมูลในตะกร้าแล้ว",
+    "transaction_saved": "บันทึกรายการขายสำเร็จ",
+    "transaction_refunded": "คืนเงินรายการนี้สำเร็จ",
+    "history_cleared": "ล้างประวัติการขายเรียบร้อยแล้ว",
+    "invalid_amount": "โปรดระบุจำนวนเงินที่ถูกต้อง",
+    "invoice_paid": "ชำระบิทคอยน์สำเร็จ!",
+    "coupon_applied": "เปิดใช้งานคูปอง {code} สำเร็จแล้ว!",
+    "invalid_coupon": "รหัสคูปองไม่ถูกต้อง",
+    "order_held": "พักบิลสำเร็จในชื่อ '{name}'",
+    "order_resumed": "เรียกคืนบิล '{name}' เรียบร้อยแล้ว",
+    "order_deleted": "ลบบิลค้างชำระ '{name}' เรียบร้อยแล้ว",
+    "order_delete_confirm": "คุณแน่ใจหรือไม่ว่าต้องการลบบิลค้างชำระนี้?"
+  }
+}
