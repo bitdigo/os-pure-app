@@ -22,6 +22,9 @@ pos-pure/
     ├── core/
     │   └── Component.js
     ├── components/
+    │   ├── DashboardPage.js
+    │   ├── TransactionsPage.js
+    │   ├── CatalogPage.js
     │   ├── Navbar.js
     │   ├── ProductGrid.js
     │   ├── CartPanel.js
@@ -54,30 +57,33 @@ index.html
 
 ## Routing
 
-The app has a tiny hash router in `js/routes/router.js`. It syncs `window.location.hash` with `store.state.currentRoute`.
+The app uses one `index.html` and a tiny hash router in `js/routes/router.js`. It syncs `window.location.hash` with `store.state.currentRoute`.
 
 Use these rules:
 
-- Use `#/pos` for the main POS workspace.
-- Use `#/history` and `#/catalog` as working route examples. They open the existing modal screens.
-- Use store state for modals: checkout, history, catalog, pending orders, tables.
+- Use `#/dashboard` as the default landing page.
+- Use `#/pos` for the sales workspace.
+- Use `#/transactions` for the sales ledger.
+- Use `#/catalog` for product management.
+- Use store state for short workflow modals: checkout, pending orders, table selection.
 - Add routes only when a feature is a real page, not just a modal.
 - Prefer hash routes because this app can run as static files without a server rewrite.
 
 Suggested routes if the app grows:
 
 ```text
-#/pos          Main sales workspace
-#/history      Full sales history page
-#/catalog      Product catalog management page
-#/settings     Store, theme, language, tax, and printer settings
+#/dashboard     Main overview
+#/pos           Sales workspace
+#/transactions  Transaction history and refunds
+#/catalog       Product catalog management
+#/settings      Store, theme, language, tax, and printer settings
 ```
 
 Route state lives in `store.js`:
 
 ```js
 state: {
-  currentRoute: 'pos',
+  currentRoute: 'dashboard',
   activeModal: null
 }
 ```
@@ -85,13 +91,13 @@ state: {
 Change page route with a store action:
 
 ```js
-store.setRoute('history');
+store.setRoute('transactions');
 ```
 
 Or with a URL hash:
 
 ```text
-http://localhost:8000/#/history
+http://localhost:8000/#/transactions
 ```
 
 The router is initialized in `js/app.js`:
@@ -119,10 +125,20 @@ Keep route names simple and stable. Components should not parse URLs directly; t
 Current route behavior:
 
 ```text
-#/pos       closes route-backed modals and shows the POS workspace
-#/history   sets currentRoute to "history" and opens the history modal
-#/catalog   sets currentRoute to "catalog" and opens the catalog modal
+#/dashboard     shows dashboard metrics
+#/pos           shows product grid and cart
+#/transactions  shows transactions and refund actions
+#/catalog       shows catalog management
 ```
+
+Clean URL option:
+
+```text
+/transactions
+/catalog
+```
+
+Use clean URLs only when the deployment server can rewrite every route back to `index.html`. For this local static app, hash routes are the safest default.
 
 ## State
 

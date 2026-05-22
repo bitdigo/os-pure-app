@@ -1,19 +1,17 @@
-const DEFAULT_ROUTE = 'pos';
+const DEFAULT_ROUTE = 'dashboard';
 
 const ROUTES = new Set([
+  'dashboard',
   'pos',
+  'transactions',
   'history',
   'catalog',
   'settings'
 ]);
 
-const ROUTE_MODALS = {
-  history: 'history',
-  catalog: 'catalog'
-};
-
 function readHashRoute() {
   const route = window.location.hash.replace(/^#\/?/, '').trim();
+  if (route === 'history') return 'transactions';
   return ROUTES.has(route) ? route : DEFAULT_ROUTE;
 }
 
@@ -25,14 +23,6 @@ function writeHashRoute(route) {
 }
 
 export function initRouter(store) {
-  function applyRouteEffects(route) {
-    if (ROUTE_MODALS[route]) {
-      store.openModal(ROUTE_MODALS[route]);
-    } else if (route === DEFAULT_ROUTE) {
-      store.closeModal();
-    }
-  }
-
   function syncRouteFromHash() {
     const route = readHashRoute();
     store.setRoute(route);
@@ -48,12 +38,5 @@ export function initRouter(store) {
   store.subscribe('currentRoute', route => {
     const nextRoute = route || DEFAULT_ROUTE;
     writeHashRoute(nextRoute);
-    applyRouteEffects(nextRoute);
-  });
-
-  store.subscribe('activeModal', modal => {
-    if (!modal && store.state.currentRoute !== DEFAULT_ROUTE) {
-      store.setRoute(DEFAULT_ROUTE);
-    }
   });
 }

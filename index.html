@@ -58,14 +58,21 @@
     <!-- Main Workspace Content -->
     <main class="flex-1 flex overflow-hidden relative">
       
+      <!-- Route Page Content -->
+      <section id="page-content" class="flex-1 overflow-y-auto">
+        <div id="dashboard-page"></div>
+        <div id="transactions-page"></div>
+        <div id="catalog-page"></div>
+      </section>
+
       <!-- Product Catalog Section (Left) -->
-      <section class="flex-1 overflow-y-auto" id="product-grid"></section>
+      <section class="flex-1 overflow-y-auto hidden" id="product-grid"></section>
 
       <!-- Cart Drawer Section (Right) -->
       <!-- Collapsible on mobile, static on desktop -->
       <section 
         id="cart-panel" 
-        class="fixed inset-y-0 right-0 z-40 w-full sm:w-96 lg:w-96 lg:static lg:block transform translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out lg:border-l lg:border-gray-200 lg:dark:border-neutral-800"
+        class="hidden fixed inset-y-0 right-0 z-40 w-full sm:w-96 lg:w-96 lg:static lg:block transform translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out lg:border-l lg:border-gray-200 lg:dark:border-neutral-800"
       ></section>
 
     </main>
@@ -75,7 +82,7 @@
   <!-- Floating Mobile Cart Button -->
   <button 
     id="mobile-cart-toggle" 
-    class="lg:hidden fixed bottom-6 right-6 z-40 w-14 h-14 rounded-full bg-orange-500 text-white shadow-xl shadow-orange-500/30 flex items-center justify-center text-xl transition-transform active:scale-95"
+    class="hidden lg:hidden fixed bottom-6 right-6 z-40 w-14 h-14 rounded-full bg-orange-500 text-white shadow-xl shadow-orange-500/30 flex items-center justify-center text-xl transition-transform active:scale-95"
   >
     <i class="fa-solid fa-basket-shopping"></i>
     <span id="mobile-cart-badge" class="absolute -top-1 -right-1 w-6 h-6 rounded-full bg-red-500 text-white text-[11px] font-black flex items-center justify-center hidden">0</span>

@@ -195,7 +195,7 @@ Adding new state:
 Example action:
 
 ```js
-store.setRoute('history');
+store.setRoute('transactions');
 store.openModal('checkout');
 store.closeModal();
 ```

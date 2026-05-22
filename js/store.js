@@ -39,7 +39,7 @@ class Store {
       transactions: [],
       pendingOrders: [],
       activeInvoice: null,
-      currentRoute: 'pos',
+      currentRoute: 'dashboard',
       activeModal: null,
       toast: null
     };

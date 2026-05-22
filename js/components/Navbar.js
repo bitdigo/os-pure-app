@@ -8,6 +8,7 @@ export class Navbar {
     
     // Subscribe to state changes to trigger re-renders
     store.subscribe('currentCategory', () => this.render());
+    store.subscribe('currentRoute', () => this.render());
     store.subscribe('activeLanguage', () => this.render());
     store.subscribe('theme', () => this.render());
     store.subscribe('transactions', () => this.render());
@@ -33,12 +34,15 @@ export class Navbar {
     this.container.querySelectorAll('.category-btn').forEach(btn => {
       btn.addEventListener('click', () => {
         const cat = btn.getAttribute('data-cat');
-        if (cat === 'catalog') {
-          store.setRoute('catalog');
-        } else {
-          store.setRoute('pos');
-          store.setCategory(cat);
-        }
+        store.setRoute('pos');
+        store.setCategory(cat);
+      });
+    });
+
+    // Route tabs
+    this.container.querySelectorAll('.route-tab').forEach(btn => {
+      btn.addEventListener('click', () => {
+        store.setRoute(btn.getAttribute('data-route'));
       });
     });
 
@@ -63,7 +67,7 @@ export class Navbar {
     const historyBtn = this.container.querySelector('#history-toggle');
     if (historyBtn) {
       historyBtn.addEventListener('click', () => {
-        store.setRoute('history');
+        store.setRoute('transactions');
       });
     }
 
@@ -87,15 +91,21 @@ export class Navbar {
   render() {
     if (!this.container) return;
 
-    const { currentCategory, activeLanguage, theme, transactions, pendingOrders } = store.state;
+    const { currentCategory, currentRoute, activeLanguage, theme, transactions, pendingOrders } = store.state;
     
     const categories = [
       { id: 'all', icon: 'fa-border-all', labelKey: 'categories.all' },
       { id: 'food', icon: 'fa-utensils', labelKey: 'categories.food' },
       { id: 'drinks', icon: 'fa-coffee', labelKey: 'categories.drinks' },
       { id: 'desserts', icon: 'fa-ice-cream', labelKey: 'categories.desserts' },
-      { id: 'merch', icon: 'fa-tshirt', labelKey: 'categories.merch' },
-      { id: 'catalog', icon: 'fa-store', labelKey: 'categories.catalog', highlight: true }
+      { id: 'merch', icon: 'fa-tshirt', labelKey: 'categories.merch' }
+    ];
+
+    const routes = [
+      { id: 'dashboard', icon: 'fa-chart-pie', label: 'Dashboard' },
+      { id: 'pos', icon: 'fa-cash-register', label: 'POS' },
+      { id: 'transactions', icon: 'fa-receipt', label: 'Transactions' },
+      { id: 'catalog', icon: 'fa-store', label: 'Catalog' }
     ];
 
     const orderCount = transactions.filter(t => !t.refunded).length;
@@ -178,22 +188,30 @@ export class Navbar {
       <!-- Category Filter Slider -->
       <nav class="bg-gray-50 dark:bg-neutral-950 border-b border-gray-100 dark:border-neutral-900 py-3 transition-colors duration-200">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div class="category-slider flex gap-2 overflow-x-auto pb-1 -mb-1">
-            ${categories.map(cat => {
+          <div class="flex gap-2 overflow-x-auto pb-1 -mb-1">
+            ${routes.map(route => {
+              const isActive = currentRoute === route.id;
+              return `
+                <button
+                  data-route="${route.id}"
+                  class="route-tab flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold transition-all ${
+                    isActive
+                      ? 'bg-neutral-900 text-white dark:bg-white dark:text-neutral-950 shadow-md'
+                      : 'bg-white dark:bg-neutral-900 text-gray-600 dark:text-neutral-400 border border-gray-200 dark:border-neutral-800 hover:bg-gray-100 dark:hover:bg-neutral-800'
+                  }"
+                >
+                  <i class="fa-solid ${route.icon}"></i>
+                  <span>${route.label}</span>
+                </button>
+              `;
+            }).join('')}
+          </div>
+
+          ${currentRoute === 'pos' ? `
+            <div class="category-slider flex gap-2 overflow-x-auto pt-3 pb-1 -mb-1">
+              ${categories.map(cat => {
               const isActive = currentCategory === cat.id;
               
-              if (cat.highlight) {
-                return `
-                  <button 
-                    data-cat="${cat.id}"
-                    class="category-btn flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold border-2 border-dashed border-orange-500/40 text-orange-500 hover:border-orange-500 hover:bg-orange-500/5 transition-all"
-                  >
-                    <i class="fa-solid ${cat.icon}"></i>
-                    <span data-i18n="${cat.labelKey}">${i18n.t(cat.labelKey)}</span>
-                  </button>
-                `;
-              }
-
               return `
                 <button 
                   data-cat="${cat.id}"
@@ -207,8 +225,9 @@ export class Navbar {
                   <span data-i18n="${cat.labelKey}">${i18n.t(cat.labelKey)}</span>
                 </button>
               `;
-            }).join('')}
-          </div>
+              }).join('')}
+            </div>
+          ` : ''}
         </div>
       </nav>
     `;

@@ -8,6 +8,9 @@ import { HistoryModal } from './components/HistoryModal.js';
 import { CatalogModal } from './components/CatalogModal.js';
 import { PendingOrdersModal } from './components/PendingOrdersModal.js';
 import { TableModal } from './components/TableModal.js';
+import { DashboardPage } from './components/DashboardPage.js';
+import { TransactionsPage } from './components/TransactionsPage.js';
+import { CatalogPage } from './components/CatalogPage.js';
 import { initRouter } from './routes/router.js';
 
 class App {
@@ -34,6 +37,11 @@ class App {
     new CatalogModal('catalog-modal-container');
     new PendingOrdersModal('pending-orders-modal-container');
     new TableModal('table-modal-container');
+    new DashboardPage('dashboard-page');
+    new TransactionsPage('transactions-page');
+    new CatalogPage('catalog-page');
+
+    this.initRouteLayout();
 
     // 5. Setup mobile cart badge subscription
     store.subscribe('cart', (cart) => {
@@ -50,6 +58,29 @@ class App {
     });
 
     console.log('BitDigo POS system successfully initialized.');
+  }
+
+  initRouteLayout() {
+    const syncLayout = route => {
+      const isPos = route === 'pos';
+      const pageContent = document.getElementById('page-content');
+      const productGrid = document.getElementById('product-grid');
+      const cartPanel = document.getElementById('cart-panel');
+      const mobileCartToggle = document.getElementById('mobile-cart-toggle');
+      const mobileCartOverlay = document.getElementById('mobile-cart-overlay');
+
+      pageContent?.classList.toggle('hidden', isPos);
+      productGrid?.classList.toggle('hidden', !isPos);
+      cartPanel?.classList.toggle('hidden', !isPos);
+      mobileCartToggle?.classList.toggle('hidden', !isPos);
+
+      if (!isPos) {
+        mobileCartOverlay?.classList.add('hidden');
+      }
+    };
+
+    syncLayout(store.state.currentRoute);
+    store.subscribe('currentRoute', syncLayout);
   }
 
   initToastSystem() {
